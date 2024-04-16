@@ -33,7 +33,7 @@ st.title('Disaster Tweet Classifier')
 
 # Add a description
 st.write("""
-You can enter a tweet in english. The model will analyze it and tell if it refers to a disaster or not.
+You can enter a tweet in english. The model will analyze it and determine if it refers to a disaster.
 """)
 
 def predict(model, tokenizer, text):
