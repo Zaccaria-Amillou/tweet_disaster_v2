@@ -7,18 +7,12 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 import re
-import csv
-from opencensus.ext.azure.log_exporter import AzureLogHandler
-import logging
-
 
 
 nltk.download('stopwords')
 nltk.download('wordnet')
 
 
-logger = logging.getLogger(__name__)
-logger.addHandler(AzureLogHandler(connection_string='InstrumentationKey=cc8b2f05-ca7d-4f53-9ffe-8fbf51e3ff78'))
 
 # Preprocessing
 def preprocess(text):
@@ -63,25 +57,9 @@ if st.button("Predict"):
         prediction = model.predict(data_tok)
         
         # Convert the prediction to 'POSITIVE' or 'NEGATIVE'
-        st.session_state.sentiment = 'POSITIVE' if prediction[0][0] > 0.7 else 'NEGATIVE'
+        st.session_state.sentiment = 'This tweet talks about a disaster ! ' if prediction[0][0] > 0.7 else 'Not a disaster tweet, you are safe'
         
         # Display the prediction
         st.write("Prediction:", st.session_state.sentiment)
 
-# Ask for user feedback
-st.write("Can you give us your feedback?")
 
-if st.button("Yes, it was correct"):
-    st.session_state.feedback = "Yes"
-    # Log the feedback to Application Insights
-    logger.warning('User feedback', extra={'custom_dimensions': {'Tweet': tweet_input, 'Prediction': st.session_state.sentiment, 'Feedback': st.session_state.feedback}})
-    st.write("Thank you for your feedback!")
-    # Rerun the app
-    st.experimental_rerun()
-elif st.button("No, it wasn't correct"):
-    st.session_state.feedback = "No"
-    # Log the feedback to Application Insights
-    logger.warning('User feedback', extra={'custom_dimensions': {'Tweet': tweet_input, 'Prediction': st.session_state.sentiment, 'Feedback': st.session_state.feedback}})
-    st.write("We're sorry to hear that. We'll use your feedback to improve our model.")
-    # Rerun the app
-    st.experimental_rerun()
