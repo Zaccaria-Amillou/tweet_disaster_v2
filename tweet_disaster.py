@@ -41,8 +41,15 @@ st.write("""
 You can enter a tweet in english and the model will analyze it and tell if it refers to a disaster or not.
 """)
 
+# Add a button for generating a test tweet
+if st.button("Generate a tweet"):
+    tweet_input = 'there is a fire run!'
+else:
+    st.session_state.tweet_input = ''
+
 # Input text box for user to enter a tweet
-tweet_input = st.text_input("Enter a tweet:")
+tweet_input = st.text_input("Enter a tweet:", tweet_input)
+
 
 if 'feedback' not in st.session_state:
     st.session_state.feedback = None
