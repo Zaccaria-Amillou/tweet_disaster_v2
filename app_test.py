@@ -34,7 +34,12 @@ with open('tokenizer/tokenizer_l_glo.pkl', 'rb') as handle:
 # Load the model
 model = load_model('model/model.h5')
 
-st.title("Tweet Sentiment Prediction")
+st.title('Disaster Tweet Classifier')
+
+# Add a description
+st.write("""
+You can enter a tweet in english and the model will analyze it and tell if it refers to a disaster or not.
+""")
 
 # Input text box for user to enter a tweet
 tweet_input = st.text_input("Enter a tweet:")
