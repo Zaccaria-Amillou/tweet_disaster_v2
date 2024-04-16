@@ -32,7 +32,7 @@ with open('tokenizer/tokenizer_l_glo.pkl', 'rb') as handle:
     tokenizer = pickle.load(handle)
 
 # Load the model
-model = load_model('model/new_model.h5')
+model = load_model('model/best_model_model.h5')
 
 st.title('Disaster Tweet Classifier')
 
