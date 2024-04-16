@@ -36,7 +36,7 @@ st.write("""
 You can enter a tweet in english. The model will analyze it and tell if it refers to a disaster or not.
 """)
 
-def predict_sentiment(model, tokenizer, text):
+def predict(model, tokenizer, text):
     # Preprocess the text
     text = process_tweets(text)
     # Tokenize and pad the text
@@ -44,12 +44,15 @@ def predict_sentiment(model, tokenizer, text):
     padded_sequence = pad_sequences(sequence, maxlen=100)
     # Make the prediction
     prediction = model.predict(padded_sequence)
-    # Convert the prediction to a sentiment
-    sentiment = 'This is a disaster tweet' if prediction[0][0] > 0.5 else 'Not a disaster tweet'
-    return sentiment, prediction[0][0]
+    # Convert the prediction to a string
+    string = 'This is a disaster tweet' if prediction[0][0] > 0.5 else 'Not a disaster tweet'
+    return string, prediction[0][0]
 
 user_input = st.text_input("Enter a tweet:")
 
 if st.button('Analyze tweet'):
-    sentiment, probability = predict_sentiment(model, tokenizer, user_input)
-    st.write(f'Result: {sentiment}')
+    if user_input:
+        string, probability = predict(model, tokenizer, user_input)
+        st.write(f'Result: {string}')
+    else:
+        st.write("Please enter a tweet before analyzing.")
