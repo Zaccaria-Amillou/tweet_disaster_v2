@@ -29,7 +29,12 @@ model = load_model('model/best_model_model.h5')
 with open('tokenizer/tokenizer_l_glo.pkl', 'rb') as f:
     tokenizer = pickle.load(f)
 
-st.title('Sentiment Analysis')
+st.title('Disaster Tweet Classifier')
+
+# Add a description
+st.write("""
+You can enter a tweet in english. The model will analyze it and tell if it refers to a disaster or not.
+""")
 
 def predict_sentiment(model, tokenizer, text):
     # Preprocess the text
@@ -43,8 +48,8 @@ def predict_sentiment(model, tokenizer, text):
     sentiment = 'This is a disaster tweet' if prediction[0][0] > 0.5 else 'Not a disaster tweet'
     return sentiment, prediction[0][0]
 
-user_input = st.text_input("Enter a sentence to analyze its sentiment")
+user_input = st.text_input("Enter a tweet:")
 
-if st.button('Predict'):
+if st.button('Analyze tweet'):
     sentiment, probability = predict_sentiment(model, tokenizer, user_input)
-    st.write(f'Sentiment: {sentiment}, Probability: {probability}')
+    st.write(f'Result: {sentiment}')
