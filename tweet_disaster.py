@@ -38,8 +38,12 @@ st.title('Disaster Tweet Classifier')
 
 # Add a description
 st.write("""
-You can enter a tweet in english and the model will analyze it and tell if it refers to a disaster or not.
+You can either generate one tweet to test it or formulate directly your tweet in english.
+          The API will then analyze it and tell if it refers to a disaster or not.
 """)
+
+# Initialize tweet_input
+tweet_input = ''
 
 # Add a button for generating a test tweet
 if st.button("Generate a tweet"):
