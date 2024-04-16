@@ -47,19 +47,28 @@ tweet_input = ''
 
 # Add a button for generating a test tweet
 if st.button("Generate a tweet"):
-    tweet_input = 'there is a fire run!'
+    tweet_input = 'There is a fire run!'
+    
+    # Preprocess the input
+    data_prepocess = [preprocess(tweet_input)]
+    
+    # Tokenize and pad the input
+    data_tok = pad_sequences(tokenizer.texts_to_sequences(data_prepocess), maxlen=100)
+    
+    # Make a prediction
+    prediction = model.predict(data_tok)
+    
+    # Convert the prediction to 'POSITIVE' or 'NEGATIVE'
+    st.session_state.sentiment = 'This tweet talks about a disaster ! ' if prediction[0][0] > 0.7 else 'Not a disaster tweet, you are safe'
+    
+    # Display the prediction
+    st.write("Prediction:", st.session_state.sentiment)
 else:
     st.session_state.tweet_input = ''
 
 # Input text box for user to enter a tweet
 tweet_input = st.text_input("Enter a tweet:", tweet_input)
 
-
-if 'feedback' not in st.session_state:
-    st.session_state.feedback = None
-
-if 'sentiment' not in st.session_state:
-    st.session_state.sentiment = None
 
 if st.button("Predict"):
     if tweet_input:
@@ -77,5 +86,7 @@ if st.button("Predict"):
         
         # Display the prediction
         st.write("Prediction:", st.session_state.sentiment)
+    else:
+        st.write("Please enter a tweet before predicting!")
 
 
