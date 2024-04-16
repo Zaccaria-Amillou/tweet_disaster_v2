@@ -45,6 +45,11 @@ You can either generate one tweet to test it or formulate directly your tweet in
 # Initialize tweet_input
 tweet_input = ''
 
+
+
+# Input text box for user to enter a tweet
+tweet_input = st.text_input("Enter a tweet:", tweet_input)
+
 # Add a button for generating a test tweet
 if st.button("Generate a tweet"):
     tweet_input = 'There is a fire run!'
@@ -59,16 +64,12 @@ if st.button("Generate a tweet"):
     prediction = model.predict(data_tok)
     
     # Convert the prediction to 'POSITIVE' or 'NEGATIVE'
-    st.session_state.sentiment = 'This tweet talks about a disaster ! ' if prediction[0][0] > 0.7 else 'Not a disaster tweet, you are safe'
+    st.session_state.sentiment = 'This tweet talks about a disaster ! ' if prediction[0][0] > 0.5 else 'Not a disaster tweet, you are safe'
     
     # Display the prediction
     st.write("Prediction:", st.session_state.sentiment)
 else:
     st.session_state.tweet_input = ''
-
-# Input text box for user to enter a tweet
-tweet_input = st.text_input("Enter a tweet:", tweet_input)
-
 
 if st.button("Predict"):
     if tweet_input:
@@ -82,11 +83,12 @@ if st.button("Predict"):
         prediction = model.predict(data_tok)
         
         # Convert the prediction to 'POSITIVE' or 'NEGATIVE'
-        st.session_state.sentiment = 'This tweet talks about a disaster ! ' if prediction[0][0] > 0.7 else 'Not a disaster tweet, you are safe'
+        st.session_state.sentiment = 'This tweet talks about a disaster ! ' if prediction[0][0] > 0.5 else 'Not a disaster tweet, you are safe'
         
         # Display the prediction
         st.write("Prediction:", st.session_state.sentiment)
     else:
         st.write("Please enter a tweet before predicting!")
+
 
 
