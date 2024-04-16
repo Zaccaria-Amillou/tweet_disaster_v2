@@ -1,24 +1,21 @@
-import streamlit as st
-import numpy as np
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.sequence import pad_sequences
-import pickle
+import re
 import nltk
+import pickle
+import streamlit as st
+from keras.models import load_model
+from keras.preprocessing.sequence import pad_sequences
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
-import re
-
 
 nltk.download('stopwords')
 nltk.download('wordnet')
 
-
-
 # Preprocessing
-def preprocess(text):
+def process_tweets(text):
     stop_words = stopwords.words("english")
     lemmatizer = WordNetLemmatizer()
     text_cleaning_re = "@\S+|https?:\S+|http?:\S|[^A-Za-z0-9]+|[-+]?\d*\.\d+|\d+"
+    
     # Remove link,user and special characters
     text = re.sub(text_cleaning_re, ' ', str(text).lower()).strip()
     tokens = []
@@ -27,40 +24,27 @@ def preprocess(text):
             tokens.append(lemmatizer.lemmatize(token))
     return " ".join(tokens)
 
-# Load the tokenizer
-with open('tokenizer/tokenizer_l_glo.pkl', 'rb') as handle:
-    tokenizer = pickle.load(handle)
-
-# Load the model
+# Load your trained model and tokenizer
 model = load_model('model/best_model_model.h5')
+with open('tokenizer/tokenizer_l_glo.pkl', 'rb') as f:
+    tokenizer = pickle.load(f)
 
-st.title('Disaster Tweet Classifier')
+st.title('Sentiment Analysis')
 
-# Add a description
-st.write("""
-You can enter a tweet in english and the model will analyze it and tell if it refers to a disaster or not.
-""")
+def predict_sentiment(model, tokenizer, text):
+    # Preprocess the text
+    text = process_tweets(text)
+    # Tokenize and pad the text
+    sequence = tokenizer.texts_to_sequences([text])
+    padded_sequence = pad_sequences(sequence, maxlen=100)
+    # Make the prediction
+    prediction = model.predict(padded_sequence)
+    # Convert the prediction to a sentiment
+    sentiment = 'This is a disaster tweet' if prediction[0][0] > 0.5 else 'Not a disaster tweet'
+    return sentiment, prediction[0][0]
 
-# Input text box for user to enter a tweet
-tweet_input = st.text_input("Enter a tweet:")
+user_input = st.text_input("Enter a sentence to analyze its sentiment")
 
-if st.button("Predict"):
-    if tweet_input:
-        # Preprocess the input
-        data_prepocess = [preprocess(tweet_input)]
-        
-        # Tokenize and pad the input
-        data_tok = pad_sequences(tokenizer.texts_to_sequences(data_prepocess), maxlen=100)
-        
-        # Make a prediction
-        prediction = model.predict(data_tok)
-        
-        # Convert the prediction to 'POSITIVE' or 'NEGATIVE'
-        st.session_state.sentiment = 'This tweet talks about a disaster ! ' if prediction[0] > 0.5 else 'Not a disaster tweet, you are safe'
-        
-        # Display the prediction
-        st.write("Prediction:", st.session_state.sentiment)
-    else:
-        st.write("Please enter a tweet before predicting.")
-
-
+if st.button('Predict'):
+    sentiment, probability = predict_sentiment(model, tokenizer, user_input)
+    st.write(f'Sentiment: {sentiment}, Probability: {probability}')
