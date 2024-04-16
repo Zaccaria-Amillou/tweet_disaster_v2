@@ -33,7 +33,7 @@ This is a Streamlit application that uses a trained machine learning model to cl
 1. Run the Streamlit application:
 
    ```bash
-   streamlit run app_test.py
+   streamlit tweet_disaster.py
    ```
 
 2. Open your web browser and go to [http://localhost:8501](http://localhost:8501) to view the application.
