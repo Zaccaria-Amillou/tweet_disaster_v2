@@ -32,7 +32,7 @@ with open('tokenizer/tokenizer_l_glo.pkl', 'rb') as handle:
     tokenizer = pickle.load(handle)
 
 # Load the model
-model = load_model('model/model.h5')
+model = load_model('model/new_model.h5')
 
 st.title('Disaster Tweet Classifier')
 
@@ -56,7 +56,7 @@ if st.button("Predict"):
         prediction = model.predict(data_tok)
         
         # Convert the prediction to 'POSITIVE' or 'NEGATIVE'
-        st.session_state.sentiment = 'This tweet talks about a disaster ! ' if prediction[0][0] < 0.5 else 'Not a disaster tweet, you are safe'
+        st.session_state.sentiment = 'This tweet talks about a disaster ! ' if prediction[0][0] > 0.5 else 'Not a disaster tweet, you are safe'
         
         # Display the prediction
         st.write("Prediction:", st.session_state.sentiment)
